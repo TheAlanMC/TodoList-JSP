@@ -29,7 +29,11 @@ public class TodoRepositoryImpl implements TodoRepository {
 
     @Override
     public void save(Todo todo) {
-
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(todo);
+        em.getTransaction().commit();
+        em.close();
     }
 
     @Override
