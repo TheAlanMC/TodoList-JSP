@@ -27,6 +27,10 @@ public class TodoServlet extends HttpServlet {
             showTodoList(request, response);
         } else if (action.equals("new")) {
             showNewTodoForm(request, response);
+        } else if (action.equals("edit")) {
+            showEditTodoForm(request, response);
+        } else if (action.equals("delete")) {
+            deleteTodoById(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -37,6 +41,10 @@ public class TodoServlet extends HttpServlet {
         String action = request.getPathInfo();
         if (action.equals("/new")) {
             createNewTodo(request, response);
+        } else if (action.equals("/edit")) {
+            updateTodo(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
@@ -52,12 +60,36 @@ public class TodoServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
+    private void showEditTodoForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Long id = Long.parseLong(request.getParameter("id"));
+        Todo todo = service.getTodoById(id);
+        request.setAttribute("todo", todo);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/views/todo-edit.jsp");
+        dispatcher.forward(request, response);
+    }
+
     private void createNewTodo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         String status = request.getParameter("status");
         String targetDate = request.getParameter("targetDate");
         service.createNewTodo(title, description, status, targetDate);
-        response.sendRedirect(request.getContextPath() + "/TodoList/");
+        response.sendRedirect(request.getContextPath() + "/TodoList");
+    }
+
+    private void updateTodo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long id = Long.parseLong(request.getParameter("id"));
+        String title = request.getParameter("title");
+        String description = request.getParameter("description");
+        String status = request.getParameter("status");
+        String targetDate = request.getParameter("targetDate");
+        service.updateTodo(id, title, description, status, targetDate);
+        response.sendRedirect(request.getContextPath() + "/TodoList");
+    }
+
+    private void deleteTodoById(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long id = Long.parseLong(request.getParameter("id"));
+        service.deleteTodoById(id);
+        response.sendRedirect(request.getContextPath() + "/TodoList");
     }
 }

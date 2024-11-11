@@ -4,6 +4,7 @@
 <%
     List<Todo> todos = (List<Todo>) request.getAttribute("todos");
 %>
+
 <%@ include file="/components/header.jsp" %>
 <h2>List of Todos</h2>
 <a href="/TodoList?action=new" class="add-button">Add +</a>
@@ -24,7 +25,7 @@
         <td><%= todo.getDescription() %></td>
         <td><%= todo.getStatus() %></td>
         <td><%= todo.getTargetDate() %></td>
-        <td><a href="#" class="edit-link">Edit</a> / <a href="#" class="delete-link">Delete</a></td>
+        <td><a href="/TodoList?action=edit&id=<%= todo.getId() %>" class="edit-link">Edit</a> / <a href="/TodoList?action=delete&id=<%= todo.getId() %>" class="delete-link">Delete</a></td>
     </tr>
     <%
         }

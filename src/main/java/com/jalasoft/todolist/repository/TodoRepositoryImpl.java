@@ -24,7 +24,10 @@ public class TodoRepositoryImpl implements TodoRepository {
 
     @Override
     public Todo findById(Long id) {
-        return null;
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        Todo todo = em.find(Todo.class, id);
+        em.close();
+        return todo;
     }
 
     @Override
@@ -38,11 +41,20 @@ public class TodoRepositoryImpl implements TodoRepository {
 
     @Override
     public void update(Todo todo) {
-
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        em.getTransaction().begin();
+        em.merge(todo);
+        em.getTransaction().commit();
+        em.close();
     }
 
     @Override
     public void delete(Long id) {
-
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        em.getTransaction().begin();
+        Todo todo = em.find(Todo.class, id);
+        em.remove(todo);
+        em.getTransaction().commit();
+        em.close();
     }
 }

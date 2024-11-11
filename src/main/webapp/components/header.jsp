@@ -7,6 +7,6 @@
 </head>
 <body>
     <header>
-        <h1>Todo App</h1>
+        <a href="/TodoList" class="home-link">Todo App</a>
     </header>
     <main>
