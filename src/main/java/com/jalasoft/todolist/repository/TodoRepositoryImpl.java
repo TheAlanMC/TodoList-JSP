@@ -14,9 +14,11 @@ import java.util.List;
 public class TodoRepositoryImpl implements TodoRepository {
 
     @Override
-    public List<Todo> findAll() {
+    public List<Todo> findAll(int page, int size) {
         EntityManager em = EntityManagerUtil.getEntityManager();
-        TypedQuery<Todo> query = em.createQuery("SELECT t FROM Todo t", Todo.class);
+        TypedQuery<Todo> query = em.createQuery("SELECT t FROM Todo t ORDER BY t.id", Todo.class);
+        query.setFirstResult(page * size);
+        query.setMaxResults(size);
         List<Todo> todos = query.getResultList();
         em.close();
         return todos;
@@ -56,5 +58,14 @@ public class TodoRepositoryImpl implements TodoRepository {
         em.remove(todo);
         em.getTransaction().commit();
         em.close();
+    }
+
+    @Override
+    public long count() {
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(t) FROM Todo t", Long.class);
+        long count = query.getSingleResult();
+        em.close();
+        return count;
     }
 }

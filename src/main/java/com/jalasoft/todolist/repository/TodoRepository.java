@@ -9,9 +9,15 @@ import java.util.List;
  */
 
 public interface TodoRepository {
-    List<Todo> findAll();
+    List<Todo> findAll(int page, int size);
+
     Todo findById(Long id);
+
     void save(Todo todo);
+
     void update(Todo todo);
+
     void delete(Long id);
+
+    long count();
 }

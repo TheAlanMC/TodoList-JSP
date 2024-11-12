@@ -1,7 +1,9 @@
 package com.jalasoft.todolist.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -28,4 +30,14 @@ public class Todo {
 
     @Column(name = "target_date")
     private LocalDate targetDate;
+
+    public Todo(String title, String description, String status, LocalDate targetDate) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.targetDate = targetDate;
+    }
+
+    public Todo() {
+    }
 }
