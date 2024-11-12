@@ -1,9 +1,8 @@
 package com.jalasoft.todolist.model;
 
+import com.jalasoft.todolist.type.TodoStatusType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -25,13 +24,14 @@ public class Todo {
     @Column(name = "description")
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private TodoStatusType status;
 
     @Column(name = "target_date")
     private LocalDate targetDate;
 
-    public Todo(String title, String description, String status, LocalDate targetDate) {
+    public Todo(String title, String description, TodoStatusType status, LocalDate targetDate) {
         this.title = title;
         this.description = description;
         this.status = status;

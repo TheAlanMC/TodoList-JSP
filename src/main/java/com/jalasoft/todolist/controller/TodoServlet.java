@@ -1,10 +1,14 @@
 package com.jalasoft.todolist.controller;
 
+import com.jalasoft.todolist.exception.custom.EntityNotFoundException;
+import com.jalasoft.todolist.exception.custom.FormValidationException;
+import com.jalasoft.todolist.helper.TodoRequestHelper;
 import com.jalasoft.todolist.model.Todo;
-import com.jalasoft.todolist.repository.TodoRepositoryImpl;
 import com.jalasoft.todolist.service.TodoService;
 import com.jalasoft.todolist.service.TodoServiceImpl;
-import jakarta.servlet.RequestDispatcher;
+import com.jalasoft.todolist.util.constants.ActionPaths;
+import com.jalasoft.todolist.util.constants.FormFieldNames;
+import com.jalasoft.todolist.util.constants.ViewPaths;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,103 +25,120 @@ import java.util.List;
 @WebServlet("/TodoList/*")
 public class TodoServlet extends HttpServlet {
     private static final int PAGE_SIZE = 5;
-    public static final String VIEW_TODO_LIST = "/views/todo-list.jsp";
-    public static final String VIEW_TODO_FORM = "/views/todo-form.jsp";
-    public static final String TODO_LIST_PATH = "/TodoList";
+    private static final String TODO = "todo";
+    private static final String TODOS = "todos";
+    private static final String CURRENT_PAGE = "currentPage";
+    private static final String TOTAL_PAGES = "totalPages";
+
 
     private final TodoService service = new TodoServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        switch (action != null ? action : "") {
-            case "":
-                showTodoList(request, response);
-                break;
-            case "new":
-                showNewTodoForm(request, response);
-                break;
-            case "edit":
-                showEditTodoForm(request, response);
-                break;
-            case "delete":
-                deleteTodoById(request, response);
-                break;
-            default:
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                break;
+        try {
+            switch (action != null ? action : "") {
+                case ActionPaths.QUERY_DEFAULT:
+                    showTodoList(request, response);
+                    break;
+                case ActionPaths.QUERY_NEW:
+                    showNewTodoForm(request, response);
+                    break;
+                case ActionPaths.QUERY_EDIT:
+                    showEditTodoForm(request, response);
+                    break;
+                case ActionPaths.QUERY_DELETE:
+                    deleteTodoById(request, response);
+                    break;
+                default:
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    break;
+            }
+        } catch (EntityNotFoundException e) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String action = request.getPathInfo();
-        switch (action != null ? action : "") {
-            case "/new":
-                createNewTodo(request, response);
-                break;
-            case "/edit":
-                updateTodo(request, response);
-                break;
-            default:
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                break;
+        try {
+            switch (action != null ? action : "") {
+                case ActionPaths.PATH_NEW:
+                    createNewTodo(request, response);
+                    break;
+                case ActionPaths.PATH_EDIT:
+                    updateTodo(request, response);
+                    break;
+                default:
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    break;
+            }
+        } catch (EntityNotFoundException | ServletException e) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
     private void showTodoList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String pageParam = request.getParameter("page");
+        String pageParam = request.getParameter(TODO);
         int page = pageParam == null ? 0 : Integer.parseInt(pageParam);
 
         List<Todo> todos = service.getAllTodos(page, PAGE_SIZE);
         long totalTodos = service.count();
 
-        request.setAttribute("todos", todos);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", (int) Math.ceil((double) totalTodos / PAGE_SIZE));
+        request.setAttribute(TODOS, todos);
+        request.setAttribute(CURRENT_PAGE, page);
+        request.setAttribute(TOTAL_PAGES, (int) Math.ceil((double) totalTodos / PAGE_SIZE));
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(VIEW_TODO_LIST);
-        dispatcher.forward(request, response);
+        TodoRequestHelper.forwardToView(request, response, ViewPaths.TODO_LIST);
     }
 
     private void showNewTodoForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher(VIEW_TODO_FORM);
-        dispatcher.forward(request, response);
+        TodoRequestHelper.forwardToView(request, response, ViewPaths.TODO_FORM);
     }
 
     private void showEditTodoForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Long id = Long.parseLong(request.getParameter("id"));
+        Long id = Long.parseLong(request.getParameter(FormFieldNames.ID));
         Todo todo = service.getTodoById(id);
-        request.setAttribute("todo", todo);
+        request.setAttribute(TODO, todo);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(VIEW_TODO_FORM);
-        dispatcher.forward(request, response);
+        TodoRequestHelper.forwardToView(request, response, ViewPaths.TODO_FORM);
     }
 
-    private void createNewTodo(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        service.createNewTodo(
-                request.getParameter("title"),
-                request.getParameter("description"),
-                request.getParameter("status"),
-                request.getParameter("targetDate")
-        );
-        response.sendRedirect(request.getContextPath() + TODO_LIST_PATH);
+    private void createNewTodo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String title = request.getParameter(FormFieldNames.TITLE);
+        String description = request.getParameter(FormFieldNames.DESCRIPTION);
+        String status = request.getParameter(FormFieldNames.STATUS);
+        String targetDate = request.getParameter(FormFieldNames.TARGET_DATE);
+
+        try {
+            service.createNewTodo(title, description, status, targetDate);
+            response.sendRedirect(request.getContextPath() + ActionPaths.PATH_TODO_LIST);
+        } catch (FormValidationException e) {
+            TodoRequestHelper.setTodoAttributes(request, title, description, status, targetDate);
+            TodoRequestHelper.handleFormErrors(request, response, e, ViewPaths.TODO_FORM);
+        }
     }
 
-    private void updateTodo(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        service.updateTodo(
-                Long.parseLong(request.getParameter("id")),
-                request.getParameter("title"),
-                request.getParameter("description"),
-                request.getParameter("status"),
-                request.getParameter("targetDate")
-        );
-        response.sendRedirect(request.getContextPath() + TODO_LIST_PATH);
+    private void updateTodo(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Long id = Long.parseLong(request.getParameter(FormFieldNames.ID));
+        String title = request.getParameter(FormFieldNames.TITLE);
+        String description = request.getParameter(FormFieldNames.DESCRIPTION);
+        String status = request.getParameter(FormFieldNames.STATUS);
+        String targetDate = request.getParameter(FormFieldNames.TARGET_DATE);
+        try {
+            service.updateTodo(id, title, description, status, targetDate);
+            response.sendRedirect(request.getContextPath() + ActionPaths.PATH_TODO_LIST);
+        } catch (FormValidationException e) {
+            TodoRequestHelper.setTodoAttributes(request, title, description, status, targetDate);
+            request.setAttribute(FormFieldNames.ID, id);
+            TodoRequestHelper.handleFormErrors(request, response, e, ViewPaths.TODO_FORM);
+        }
     }
 
-    private void deleteTodoById(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Long id = Long.parseLong(request.getParameter("id"));
+    private void deleteTodoById(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        Long id = Long.parseLong(request.getParameter(FormFieldNames.ID));
         service.deleteTodoById(id);
-        response.sendRedirect(request.getContextPath() + TODO_LIST_PATH);
+        TodoRequestHelper.forwardToView(request, response, ViewPaths.TODO_LIST);
     }
 }

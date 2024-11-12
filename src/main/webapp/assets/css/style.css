@@ -55,6 +55,10 @@ h2::after {
     margin: 8px auto 0;
 }
 
+.todo-table-container {
+    height: 250px;
+}
+
 .todo-table {
     width: 100%;
     border-collapse: collapse;
@@ -145,7 +149,11 @@ label {
     color: #000000;
 }
 
-input[type=text], input[type=date], select {
+.required {
+    color: #ff0000;
+}
+
+input[type=text], input[type=date], select, textarea {
     width: 100%;
     padding: 10px 15px;
     display: inline-block;
@@ -153,6 +161,12 @@ input[type=text], input[type=date], select {
     border-radius: 4px;
     box-sizing: border-box;
     margin-bottom: 10px;
+    resize: none;
+}
+
+.error {
+    color: #ff0000;
+    margin-top: 5px;
 }
 
 button[type="submit"] {

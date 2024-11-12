@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Chris Alan Apaza Aguilar
@@ -16,7 +17,7 @@ public class TodoRepositoryImpl implements TodoRepository {
     @Override
     public List<Todo> findAll(int page, int size) {
         EntityManager em = EntityManagerUtil.getEntityManager();
-        TypedQuery<Todo> query = em.createQuery("SELECT t FROM Todo t ORDER BY t.id", Todo.class);
+        TypedQuery<Todo> query = em.createQuery("SELECT t FROM Todo t ORDER BY t.id DESC", Todo.class);
         query.setFirstResult(page * size);
         query.setMaxResults(size);
         List<Todo> todos = query.getResultList();
@@ -25,11 +26,11 @@ public class TodoRepositoryImpl implements TodoRepository {
     }
 
     @Override
-    public Todo findById(Long id) {
+    public Optional<Todo> findById(Long id) {
         EntityManager em = EntityManagerUtil.getEntityManager();
         Todo todo = em.find(Todo.class, id);
         em.close();
-        return todo;
+        return Optional.ofNullable(todo);
     }
 
     @Override

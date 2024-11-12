@@ -3,6 +3,7 @@ package com.jalasoft.todolist.repository;
 import com.jalasoft.todolist.model.Todo;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Chris Alan Apaza Aguilar
@@ -11,7 +12,7 @@ import java.util.List;
 public interface TodoRepository {
     List<Todo> findAll(int page, int size);
 
-    Todo findById(Long id);
+    Optional<Todo> findById(Long id);
 
     void save(Todo todo);
 
