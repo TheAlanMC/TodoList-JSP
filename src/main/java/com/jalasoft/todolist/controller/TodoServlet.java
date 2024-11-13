@@ -202,12 +202,11 @@ public class TodoServlet extends HttpServlet {
      *
      * @param request HttpServletRequest object containing client request
      * @param response HttpServletResponse object containing response data
-     * @throws ServletException if request could not be handled
      * @throws IOException if an I/O error occurs
      */
-    private void deleteTodoById(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void deleteTodoById(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.parseLong(request.getParameter(FormFieldNames.ID));
         service.deleteTodoById(id);
-        TodoRequestHelper.forwardToView(request, response, ViewPaths.TODO_LIST);
+        response.sendRedirect(request.getContextPath() + ActionPaths.PATH_TODO_LIST);
     }
 }
