@@ -4,16 +4,19 @@ import com.jalasoft.todolist.type.TodoStatusType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 /**
+ * Entity class that represents a Todo object.
+ * Contains fields for title, description, status, and target date.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 
 @Data
 @Entity
+@AllArgsConstructor
 @Table(name = "todo", schema = "public")
 public class Todo {
     @Id
@@ -26,9 +29,28 @@ public class Todo {
     @Column(name = "description")
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private TodoStatusType status;
 
     @Column(name = "target_date")
     private LocalDate targetDate;
+
+    /**
+     * Constructor for the Todo class.
+     *
+     * @param title       the title of the Todo
+     * @param description the description of the Todo
+     * @param status      the status of the Todo
+     * @param targetDate  the target date of the Todo
+     */
+    public Todo(String title, String description, TodoStatusType status, LocalDate targetDate) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.targetDate = targetDate;
+    }
+
+    public Todo() {
+    }
 }
