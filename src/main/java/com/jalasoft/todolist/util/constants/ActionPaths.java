@@ -1,6 +1,9 @@
 package com.jalasoft.todolist.util.constants;
 
 /**
+ * Class that contains the paths and query strings used in the application.
+ * It is used to avoid hardcoding paths and query strings.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 

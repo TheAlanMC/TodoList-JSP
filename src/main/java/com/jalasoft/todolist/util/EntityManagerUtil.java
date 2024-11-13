@@ -5,14 +5,21 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 /**
+ * Utility class for entity manager operations.
+ * It provides an entity manager factory and a method to get an entity manager.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 
 public class EntityManagerUtil {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("defaultPU");
 
+    /**
+     * Returns an entity manager.
+     *
+     * @return the entity manager
+     */
     public static EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
 }

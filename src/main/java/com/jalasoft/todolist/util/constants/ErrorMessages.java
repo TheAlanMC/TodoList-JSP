@@ -1,6 +1,9 @@
 package com.jalasoft.todolist.util.constants;
 
 /**
+ * Class that contains the error messages used in the application.
+ * It is used to avoid hardcoding error messages.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 

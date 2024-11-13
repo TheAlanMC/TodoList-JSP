@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Utility class for validation operations.
+ * It provides methods to validate fields in the application.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 
@@ -17,12 +20,24 @@ import java.util.Map;
 public class ValidationUtil {
     private final Map<String, String> errors = new HashMap<>();
 
+    /**
+     * Validates if a field is empty.
+     *
+     * @param field the field to be validated
+     * @param value the value of the field
+     */
     public void validateFieldNotEmpty(String field, String value) {
         if (value == null || value.trim().isEmpty()) {
             errors.put(field, String.format(ErrorMessages.ERROR_MESSAGE_FIELD_REQUIRED, field));
         }
     }
 
+    /**
+     * Validates if the status type is valid.
+     *
+     * @param field the field to be validated
+     * @param status the status to be validated
+     */
     public void validateStatusType(String field, String status) {
         try {
             TodoStatusType.valueOf(status);
@@ -31,6 +46,12 @@ public class ValidationUtil {
         }
     }
 
+    /**
+     * Validates if the date format is valid.
+     *
+     * @param field the field to be validated
+     * @param date the date to be validated
+     */
     public void validateDateRange(String field, String date) {
         try {
             LocalDate targetDate = DateUtil.parse(date);
@@ -43,6 +64,11 @@ public class ValidationUtil {
         }
     }
 
+    /**
+     * Checks if there are errors in the validation.
+     *
+     * @return true if there are errors, false otherwise
+     */
     public boolean hasErrors() {
         return !errors.isEmpty();
     }

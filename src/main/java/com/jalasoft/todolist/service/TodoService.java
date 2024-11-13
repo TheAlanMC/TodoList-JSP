@@ -5,6 +5,9 @@ import com.jalasoft.todolist.model.Todo;
 import java.util.List;
 
 /**
+ * Interface defining service layer operations for Todo entities.
+ * Provides business logic methods for CRUD operations.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 

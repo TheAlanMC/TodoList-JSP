@@ -7,6 +7,9 @@ import lombok.Data;
 import java.time.LocalDate;
 
 /**
+ * Entity class that represents a Todo object.
+ * Contains fields for title, description, status, and target date.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 
@@ -31,6 +34,14 @@ public class Todo {
     @Column(name = "target_date")
     private LocalDate targetDate;
 
+    /**
+     * Constructor for the Todo class.
+     *
+     * @param title       the title of the Todo
+     * @param description the description of the Todo
+     * @param status      the status of the Todo
+     * @param targetDate  the target date of the Todo
+     */
     public Todo(String title, String description, TodoStatusType status, LocalDate targetDate) {
         this.title = title;
         this.description = description;

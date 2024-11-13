@@ -1,6 +1,9 @@
 package com.jalasoft.todolist.util.constants;
 
 /**
+ * Class that contains the names of the fields used in the forms.
+ * It is used to avoid hardcoding field names.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 

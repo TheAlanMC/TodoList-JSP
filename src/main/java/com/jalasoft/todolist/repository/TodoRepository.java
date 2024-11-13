@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Interface defining repository operations for Todo entities.
+ * Supports CRUD operations and pagination.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 

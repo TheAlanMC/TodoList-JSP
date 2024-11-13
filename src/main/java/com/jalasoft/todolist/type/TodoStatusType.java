@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
+ * Enum class that represents the possible status values for a Todo object.
+ * Contains the values Pending, In Progress, and Completed.
+ *
  * @author Chris Alan Apaza Aguilar
  */
 

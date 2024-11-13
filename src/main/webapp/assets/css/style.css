@@ -68,6 +68,10 @@ h2::after {
 .todo-table th, .todo-table td {
     padding: 10px;
     text-align: left;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .todo-table th {
@@ -117,6 +121,10 @@ h2::after {
     gap: 30px;
 }
 
+.pagination .hidden {
+    visibility: hidden;
+}
+
 .pagination .previous {
     display: inline-block;
     border-top: 15px solid transparent;
@@ -129,10 +137,6 @@ h2::after {
     border-top: 15px solid transparent;
     border-bottom: 15px solid transparent;
     border-left:15px solid #ff0000;
-}
-
-.pagination .hidden {
-    visibility: hidden;
 }
 
 .todo-form {
