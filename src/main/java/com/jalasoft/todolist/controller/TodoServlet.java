@@ -4,6 +4,7 @@ import com.jalasoft.todolist.exception.custom.EntityNotFoundException;
 import com.jalasoft.todolist.exception.custom.FormValidationException;
 import com.jalasoft.todolist.helper.TodoRequestHelper;
 import com.jalasoft.todolist.model.Todo;
+import com.jalasoft.todolist.repository.TodoRepositoryImpl;
 import com.jalasoft.todolist.service.TodoService;
 import com.jalasoft.todolist.service.TodoServiceImpl;
 import com.jalasoft.todolist.util.constants.ActionPaths;
@@ -35,7 +36,7 @@ public class TodoServlet extends HttpServlet {
     private static final String TOTAL_PAGES = "totalPages";
 
 
-    private final TodoService service = new TodoServiceImpl();
+    private final TodoService service = new TodoServiceImpl(new TodoRepositoryImpl());
 
     /**
      * Processes GET requests to perform actions like showing the todo list, displaying the form for a new todo,

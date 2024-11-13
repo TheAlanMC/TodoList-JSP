@@ -2,6 +2,7 @@ package com.jalasoft.todolist.model;
 
 import com.jalasoft.todolist.type.TodoStatusType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
+@AllArgsConstructor
 @Table(name = "todo", schema = "public")
 public class Todo {
     @Id

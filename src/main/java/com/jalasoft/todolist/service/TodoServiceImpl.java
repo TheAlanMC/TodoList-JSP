@@ -23,7 +23,11 @@ import java.util.List;
 
 @Slf4j
 public class TodoServiceImpl implements TodoService {
-    private final TodoRepository repository = new TodoRepositoryImpl();
+    private final TodoRepository repository;
+
+    public TodoServiceImpl(TodoRepositoryImpl repository) {
+        this.repository = repository;
+    }
 
     /**
      * Retrieves all Todos with pagination.

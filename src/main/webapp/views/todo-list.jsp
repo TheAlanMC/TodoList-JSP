@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="com.jalasoft.todolist.model.Todo" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%
     List<Todo> todos = (List<Todo>) request.getAttribute("todos");
     int currentPage = (int) request.getAttribute("currentPage");
@@ -19,6 +20,9 @@
     // Pagination classes
     String previousClass = currentPage > 0 ? "" : "hidden";
     String nextClass = currentPage < totalPages - 1 ? "" : "hidden";
+
+    // Date formatter
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("LLLL dd yyyy");
 %>
 
 <%@ include file="/components/header.jsp" %>
@@ -46,7 +50,7 @@
             </td>
             <td><%= todo.getStatus().getValue() %>
             </td>
-            <td><%= todo.getTargetDate() %>
+            <td><%= todo.getTargetDate().format(formatter) %>
             </td>
             <td>
                 <a href="<%= editUrl %>" class="edit-link">Edit</a> /
